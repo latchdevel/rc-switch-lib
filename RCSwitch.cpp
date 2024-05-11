@@ -39,7 +39,6 @@
 
 #define memcpy_P(dest, src, num) memcpy((dest), (src), (num))
 
-#define RECEIVE_ATTR
 #define VAR_ISR_ATTR
 
 #define LOW 0
@@ -590,7 +589,7 @@ static inline unsigned int diff(int A, int B) {
 /**
  *
  */
-bool RECEIVE_ATTR RCSwitch::receiveProtocol(const int p, unsigned int changeCount) {
+bool RCSwitch::receiveProtocol(const int p, unsigned int changeCount) {
 #if defined(ESP8266) || defined(ESP32)
     const Protocol &pro = proto[p-1];
 #else
@@ -649,7 +648,7 @@ bool RECEIVE_ATTR RCSwitch::receiveProtocol(const int p, unsigned int changeCoun
     return false;
 }
 
-void RECEIVE_ATTR RCSwitch::handleInterrupt() {
+void RCSwitch::handleInterrupt() {
 
   static unsigned int changeCount = 0;
   static unsigned long lastTime = 0;
