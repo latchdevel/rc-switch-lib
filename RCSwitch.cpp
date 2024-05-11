@@ -34,26 +34,17 @@
 
 #include "RCSwitch.h"
 
-#ifdef RaspberryPi
-    // PROGMEM and _P functions are for AVR based microprocessors,
-    // so we must normalize these for the ARM processor:
-    #define PROGMEM
-    #define memcpy_P(dest, src, num) memcpy((dest), (src), (num))
-#endif
+#include <string.h> /* memcpy */
+#include <stdlib.h> /* abs */
 
-#if defined(ESP8266)
-    // interrupt handler and related code must be in RAM on ESP8266,
-    // according to issue #46.
-    #define RECEIVE_ATTR ICACHE_RAM_ATTR
-    #define VAR_ISR_ATTR
-#elif defined(ESP32)
-    #define RECEIVE_ATTR IRAM_ATTR
-    #define VAR_ISR_ATTR DRAM_ATTR
-#else
-    #define RECEIVE_ATTR
-    #define VAR_ISR_ATTR
-#endif
+#define PROGMEM
+#define memcpy_P(dest, src, num) memcpy((dest), (src), (num))
 
+#define RECEIVE_ATTR
+#define VAR_ISR_ATTR
+
+#define LOW 0
+#define HIGH 1
 
 /* Format for protocol definitions:
  * {pulselength, Sync bit, "0" bit, "1" bit, invertedSignal}
@@ -182,7 +173,7 @@ void RCSwitch::setReceiveTolerance(int nPercent) {
  */
 void RCSwitch::enableTransmit(int nTransmitterPin) {
   this->nTransmitterPin = nTransmitterPin;
-  pinMode(this->nTransmitterPin, OUTPUT);
+  //review// pinMode(this->nTransmitterPin, OUTPUT);
 }
 
 /**
@@ -518,7 +509,7 @@ void RCSwitch::send(unsigned long code, unsigned int length) {
   }
 
   // Disable transmit after sending (i.e., for inverted protocols)
-  digitalWrite(this->nTransmitterPin, LOW);
+  //review// digitalWrite(this->nTransmitterPin, LOW);
 
 #if not defined( RCSwitchDisableReceiving )
   // enable receiver again if we just disabled it
@@ -535,10 +526,10 @@ void RCSwitch::transmit(HighLow pulses) {
   uint8_t firstLogicLevel = (this->protocol.invertedSignal) ? LOW : HIGH;
   uint8_t secondLogicLevel = (this->protocol.invertedSignal) ? HIGH : LOW;
   
-  digitalWrite(this->nTransmitterPin, firstLogicLevel);
-  delayMicroseconds( this->protocol.pulseLength * pulses.high);
-  digitalWrite(this->nTransmitterPin, secondLogicLevel);
-  delayMicroseconds( this->protocol.pulseLength * pulses.low);
+  //review// digitalWrite(this->nTransmitterPin, firstLogicLevel);
+  //review// delayMicroseconds( this->protocol.pulseLength * pulses.high);
+  //review// digitalWrite(this->nTransmitterPin, secondLogicLevel);
+  //review// delayMicroseconds( this->protocol.pulseLength * pulses.low);
 }
 
 
@@ -555,11 +546,7 @@ void RCSwitch::enableReceive() {
   if (this->nReceiverInterrupt != -1) {
     RCSwitch::nReceivedValue = 0;
     RCSwitch::nReceivedBitlength = 0;
-#if defined(RaspberryPi) // Raspberry Pi
-    wiringPiISR(this->nReceiverInterrupt, INT_EDGE_BOTH, &handleInterrupt);
-#else // Arduino
-    attachInterrupt(this->nReceiverInterrupt, handleInterrupt, CHANGE);
-#endif
+    //review// attachInterrupt(this->nReceiverInterrupt, handleInterrupt, CHANGE);
   }
 }
 
@@ -567,9 +554,7 @@ void RCSwitch::enableReceive() {
  * Disable receiving data
  */
 void RCSwitch::disableReceive() {
-#if not defined(RaspberryPi) // Arduino
-  detachInterrupt(this->nReceiverInterrupt);
-#endif // For Raspberry Pi (wiringPi) you can't unregister the ISR
+  //review// detachInterrupt(this->nReceiverInterrupt);
   this->nReceiverInterrupt = -1;
 }
 
@@ -674,7 +659,7 @@ void RECEIVE_ATTR RCSwitch::handleInterrupt() {
   static unsigned long lastTime = 0;
   static unsigned int repeatCount = 0;
 
-  const long time = micros();
+  const long time = 0; //review// micros();
   const unsigned int duration = time - lastTime;
 
   if (duration > RCSwitch::nSeparationLimit) {
