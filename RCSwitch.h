@@ -50,16 +50,16 @@ class RCSwitch {
   public:
     RCSwitch();
     
-    void switchOn(int nGroupNumber, int nSwitchNumber);
-    void switchOff(int nGroupNumber, int nSwitchNumber);
-    void switchOn(const char* sGroup, int nSwitchNumber);
-    void switchOff(const char* sGroup, int nSwitchNumber);
-    void switchOn(char sFamily, int nGroup, int nDevice);
-    void switchOff(char sFamily, int nGroup, int nDevice);
-    void switchOn(const char* sGroup, const char* sDevice);
-    void switchOff(const char* sGroup, const char* sDevice);
-    void switchOn(char sGroup, int nDevice);
-    void switchOff(char sGroup, int nDevice);
+    pulse_list_t switchOn(int nGroupNumber, int nSwitchNumber);
+    pulse_list_t switchOff(int nGroupNumber, int nSwitchNumber);
+    pulse_list_t switchOn(const char* sGroup, int nSwitchNumber);
+    pulse_list_t switchOff(const char* sGroup, int nSwitchNumber);
+    pulse_list_t switchOn(char sFamily, int nGroup, int nDevice);
+    pulse_list_t switchOff(char sFamily, int nGroup, int nDevice);
+    pulse_list_t switchOn(const char* sGroup, const char* sDevice);
+    pulse_list_t switchOff(const char* sGroup, const char* sDevice);
+    pulse_list_t switchOn(char sGroup, int nDevice);
+    pulse_list_t switchOff(char sGroup, int nDevice);
 
     pulse_list_t sendTriState(const char* sCodeWord);
     pulse_list_t send(unsigned long code, unsigned int length);

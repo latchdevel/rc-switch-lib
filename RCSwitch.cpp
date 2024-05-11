@@ -161,9 +161,10 @@ void RCSwitch::setReceiveTolerance(int nPercent) {
  *
  * @param sGroup        Code of the switch group (A,B,C,D)
  * @param nDevice       Number of the switch itself (1..3)
+ * @return pulse_list_t List of pulses in microseconds
  */
-void RCSwitch::switchOn(char sGroup, int nDevice) {
-  this->sendTriState( this->getCodeWordD(sGroup, nDevice, true) );
+pulse_list_t RCSwitch::switchOn(char sGroup, int nDevice) {
+  return this->sendTriState( this->getCodeWordD(sGroup, nDevice, true) );
 }
 
 /**
@@ -171,9 +172,10 @@ void RCSwitch::switchOn(char sGroup, int nDevice) {
  *
  * @param sGroup        Code of the switch group (A,B,C,D)
  * @param nDevice       Number of the switch itself (1..3)
+ * @return pulse_list_t List of pulses in microseconds
  */
-void RCSwitch::switchOff(char sGroup, int nDevice) {
-  this->sendTriState( this->getCodeWordD(sGroup, nDevice, false) );
+pulse_list_t RCSwitch::switchOff(char sGroup, int nDevice) {
+  return this->sendTriState( this->getCodeWordD(sGroup, nDevice, false) );
 }
 
 /**
@@ -182,9 +184,10 @@ void RCSwitch::switchOff(char sGroup, int nDevice) {
  * @param sFamily  Familycode (a..f)
  * @param nGroup   Number of group (1..4)
  * @param nDevice  Number of device (1..4)
-  */
-void RCSwitch::switchOn(char sFamily, int nGroup, int nDevice) {
-  this->sendTriState( this->getCodeWordC(sFamily, nGroup, nDevice, true) );
+ * @return pulse_list_t List of pulses in microseconds
+ */
+pulse_list_t RCSwitch::switchOn(char sFamily, int nGroup, int nDevice) {
+  return this->sendTriState( this->getCodeWordC(sFamily, nGroup, nDevice, true) );
 }
 
 /**
@@ -193,9 +196,10 @@ void RCSwitch::switchOn(char sFamily, int nGroup, int nDevice) {
  * @param sFamily  Familycode (a..f)
  * @param nGroup   Number of group (1..4)
  * @param nDevice  Number of device (1..4)
+ * @return pulse_list_t List of pulses in microseconds
  */
-void RCSwitch::switchOff(char sFamily, int nGroup, int nDevice) {
-  this->sendTriState( this->getCodeWordC(sFamily, nGroup, nDevice, false) );
+pulse_list_t RCSwitch::switchOff(char sFamily, int nGroup, int nDevice) {
+  return this->sendTriState( this->getCodeWordC(sFamily, nGroup, nDevice, false) );
 }
 
 /**
@@ -203,9 +207,10 @@ void RCSwitch::switchOff(char sFamily, int nGroup, int nDevice) {
  *
  * @param nAddressCode  Number of the switch group (1..4)
  * @param nChannelCode  Number of the switch itself (1..4)
+ * @return pulse_list_t List of pulses in microseconds
  */
-void RCSwitch::switchOn(int nAddressCode, int nChannelCode) {
-  this->sendTriState( this->getCodeWordB(nAddressCode, nChannelCode, true) );
+pulse_list_t RCSwitch::switchOn(int nAddressCode, int nChannelCode) {
+  return this->sendTriState( this->getCodeWordB(nAddressCode, nChannelCode, true) );
 }
 
 /**
@@ -213,9 +218,10 @@ void RCSwitch::switchOn(int nAddressCode, int nChannelCode) {
  *
  * @param nAddressCode  Number of the switch group (1..4)
  * @param nChannelCode  Number of the switch itself (1..4)
+ * @return pulse_list_t List of pulses in microseconds
  */
-void RCSwitch::switchOff(int nAddressCode, int nChannelCode) {
-  this->sendTriState( this->getCodeWordB(nAddressCode, nChannelCode, false) );
+pulse_list_t RCSwitch::switchOff(int nAddressCode, int nChannelCode) {
+  return this->sendTriState( this->getCodeWordB(nAddressCode, nChannelCode, false) );
 }
 
 /**
@@ -224,10 +230,11 @@ void RCSwitch::switchOff(int nAddressCode, int nChannelCode) {
  *
  * @param sGroup        Code of the switch group (refers to DIP switches 1..5 where "1" = on and "0" = off, if all DIP switches are on it's "11111")
  * @param nChannelCode  Number of the switch itself (1..5)
+ * @return pulse_list_t List of pulses in microseconds
  */
-void RCSwitch::switchOn(const char* sGroup, int nChannel) {
+pulse_list_t RCSwitch::switchOn(const char* sGroup, int nChannel) {
   const char* code[6] = { "00000", "10000", "01000", "00100", "00010", "00001" };
-  this->switchOn(sGroup, code[nChannel]);
+  return this->switchOn(sGroup, code[nChannel]);
 }
 
 /**
@@ -236,10 +243,11 @@ void RCSwitch::switchOn(const char* sGroup, int nChannel) {
  *
  * @param sGroup        Code of the switch group (refers to DIP switches 1..5 where "1" = on and "0" = off, if all DIP switches are on it's "11111")
  * @param nChannelCode  Number of the switch itself (1..5)
+ * @return pulse_list_t List of pulses in microseconds
  */
-void RCSwitch::switchOff(const char* sGroup, int nChannel) {
+pulse_list_t RCSwitch::switchOff(const char* sGroup, int nChannel) {
   const char* code[6] = { "00000", "10000", "01000", "00100", "00010", "00001" };
-  this->switchOff(sGroup, code[nChannel]);
+  return this->switchOff(sGroup, code[nChannel]);
 }
 
 /**
@@ -247,9 +255,10 @@ void RCSwitch::switchOff(const char* sGroup, int nChannel) {
  *
  * @param sGroup        Code of the switch group (refers to DIP switches 1..5 where "1" = on and "0" = off, if all DIP switches are on it's "11111")
  * @param sDevice       Code of the switch device (refers to DIP switches 6..10 (A..E) where "1" = on and "0" = off, if all DIP switches are on it's "11111")
+ * @return pulse_list_t List of pulses in microseconds
  */
-void RCSwitch::switchOn(const char* sGroup, const char* sDevice) {
-  this->sendTriState( this->getCodeWordA(sGroup, sDevice, true) );
+pulse_list_t RCSwitch::switchOn(const char* sGroup, const char* sDevice) {
+  return this->sendTriState( this->getCodeWordA(sGroup, sDevice, true) );
 }
 
 /**
@@ -257,9 +266,10 @@ void RCSwitch::switchOn(const char* sGroup, const char* sDevice) {
  *
  * @param sGroup        Code of the switch group (refers to DIP switches 1..5 where "1" = on and "0" = off, if all DIP switches are on it's "11111")
  * @param sDevice       Code of the switch device (refers to DIP switches 6..10 (A..E) where "1" = on and "0" = off, if all DIP switches are on it's "11111")
+ * @return pulse_list_t List of pulses in microseconds
  */
-void RCSwitch::switchOff(const char* sGroup, const char* sDevice) {
-  this->sendTriState( this->getCodeWordA(sGroup, sDevice, false) );
+pulse_list_t RCSwitch::switchOff(const char* sGroup, const char* sDevice) {
+  return this->sendTriState( this->getCodeWordA(sGroup, sDevice, false) );
 }
 
 
@@ -413,6 +423,7 @@ char* RCSwitch::getCodeWordD(char sGroup, int nDevice, bool bStatus) {
 
 /**
  * @param sCodeWord   a tristate code word consisting of the letter 0, 1, F
+ * @return pulse_list_t List of pulses in microseconds
  */
 pulse_list_t RCSwitch::sendTriState(const char* sCodeWord) {
   // turn the tristate code word into the corresponding bit pattern, then send it
@@ -440,6 +451,7 @@ pulse_list_t RCSwitch::sendTriState(const char* sCodeWord) {
 
 /**
  * @param sCodeWord   a binary code word consisting of the letter 0, 1
+ * @return pulse_list_t List of pulses in microseconds
  */
 pulse_list_t RCSwitch::send(const char* sCodeWord) {
   // turn the tristate code word into the corresponding bit pattern, then send it
@@ -458,6 +470,10 @@ pulse_list_t RCSwitch::send(const char* sCodeWord) {
  * Transmit the first 'length' bits of the integer 'code'. The
  * bits are sent from MSB to LSB, i.e., first the bit at position length-1,
  * then the bit at position length-2, and so on, till finally the bit at position 0.
+ * 
+ * @param code        an integer (unsigned long) code to transmit
+ * @param length      code length in bits, usually 24 or 32 
+ * @return pulse_list_t List of pulses in microseconds
  */
 pulse_list_t RCSwitch::send(unsigned long code, unsigned int length) {
 
