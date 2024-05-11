@@ -610,14 +610,14 @@ bool RCSwitch::receiveProtocol(const int p, unsigned int changeCount) {
     return false;
 }
 
-void RCSwitch::handleInterrupt() {
+void RCSwitch::handleInterrupt(unsigned int _duration) {
 
   static unsigned int changeCount = 0;
-  static unsigned long lastTime = 0;
+  //static unsigned long lastTime = 0;
   static unsigned int repeatCount = 0;
 
-  const long time = 0; //review// micros();
-  const unsigned int duration = time - lastTime;
+  //const long time = 0; //review// micros();
+  const unsigned int duration = _duration; //time - lastTime;
 
   if (duration > RCSwitch::nSeparationLimit) {
     // A long stretch without signal level change occurred. This could
@@ -649,6 +649,19 @@ void RCSwitch::handleInterrupt() {
   }
 
   RCSwitch::timings[changeCount++] = duration;
-  lastTime = time;  
+  //lastTime = time;  
+}
+
+bool RCSwitch::decodePulseTrain(pulse_list_t pulse_list){
+
+   this->resetAvailable();
+
+   for (int i = 0 ; i < 2; i++) 
+      for (pulse_list_t::iterator it=pulse_list.begin(); it != pulse_list.end(); ++it)
+         handleInterrupt(*it);
+
+   handleInterrupt(200);
+
+   return this->available();
 }
 #endif

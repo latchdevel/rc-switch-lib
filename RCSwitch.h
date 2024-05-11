@@ -33,7 +33,7 @@
 #include <stdint.h>
 #include <list>
 
-typedef std::list<int> pulse_list_t;
+typedef std::list<unsigned int> pulse_list_t;
 
 // At least for the ATTiny X4/X5, receiving has to be disabled due to
 // missing libm depencies (udivmodhi4)
@@ -131,6 +131,8 @@ class RCSwitch {
     void setProtocol(int nProtocol);
     void setProtocol(int nProtocol, int nPulseLength);
 
+    bool decodePulseTrain(pulse_list_t);
+
   private:
     char* getCodeWordA(const char* sGroup, const char* sDevice, bool bStatus);
     char* getCodeWordB(int nGroupNumber, int nSwitchNumber, bool bStatus);
@@ -138,7 +140,7 @@ class RCSwitch {
     char* getCodeWordD(char group, int nDevice, bool bStatus);
 
     #if not defined( RCSwitchDisableReceiving )
-    static void handleInterrupt();
+    static void handleInterrupt(unsigned int duration);
     static bool receiveProtocol(const int p, unsigned int changeCount);
     int nReceiverInterrupt;
     #endif
