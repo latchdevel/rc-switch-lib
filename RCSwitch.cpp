@@ -76,7 +76,6 @@ enum {
    numProto = sizeof(proto) / sizeof(proto[0])
 };
 
-#if not defined( RCSwitchDisableReceiving )
 volatile unsigned long RCSwitch::nReceivedValue = 0;
 volatile unsigned int RCSwitch::nReceivedBitlength = 0;
 volatile unsigned int RCSwitch::nReceivedDelay = 0;
@@ -87,16 +86,12 @@ const unsigned int RCSwitch::nSeparationLimit = 4300;
 // according to discussion on issue #14 it might be more suitable to set the separation
 // limit to the same time as the 'low' part of the sync signal for the current protocol.
 unsigned int RCSwitch::timings[RCSWITCH_MAX_CHANGES];
-#endif
 
 RCSwitch::RCSwitch() {
   this->setRepeatTransmit(10);
   this->setProtocol(1);
-  #if not defined( RCSwitchDisableReceiving )
-  this->nReceiverInterrupt = -1;
   this->setReceiveTolerance(60);
   RCSwitch::nReceivedValue = 0;
-  #endif
 }
 
 /**
@@ -142,11 +137,9 @@ void RCSwitch::setRepeatTransmit(int nRepeatTransmit) {
 /**
  * Set Receiving Tolerance
  */
-#if not defined( RCSwitchDisableReceiving )
 void RCSwitch::setReceiveTolerance(int nPercent) {
   RCSwitch::nReceiveTolerance = nPercent;
 }
-#endif
 
 /**
  * Switch a remote switch on (Type D REV)
@@ -493,32 +486,6 @@ pulse_list_t RCSwitch::send(unsigned long code, unsigned int length) {
   return pulse_list;
 }
 
-
-#if not defined( RCSwitchDisableReceiving )
-/**
- * Enable receiving data
- */
-void RCSwitch::enableReceive(int interrupt) {
-  this->nReceiverInterrupt = interrupt;
-  this->enableReceive();
-}
-
-void RCSwitch::enableReceive() {
-  if (this->nReceiverInterrupt != -1) {
-    RCSwitch::nReceivedValue = 0;
-    RCSwitch::nReceivedBitlength = 0;
-    //review// attachInterrupt(this->nReceiverInterrupt, handleInterrupt, CHANGE);
-  }
-}
-
-/**
- * Disable receiving data
- */
-void RCSwitch::disableReceive() {
-  //review// detachInterrupt(this->nReceiverInterrupt);
-  this->nReceiverInterrupt = -1;
-}
-
 bool RCSwitch::available() {
   return RCSwitch::nReceivedValue != 0;
 }
@@ -610,6 +577,7 @@ bool RCSwitch::receiveProtocol(const int p, unsigned int changeCount) {
     return false;
 }
 
+#if 0
 void RCSwitch::handleInterrupt(unsigned int _duration) {
 
   static unsigned int changeCount = 0;
@@ -652,7 +620,6 @@ void RCSwitch::handleInterrupt(unsigned int _duration) {
   //lastTime = time;  
 }
 
-#if 0
 bool RCSwitch::decodePulseTrain(pulse_list_t pulse_list){
 
    this->resetAvailable();
@@ -697,5 +664,4 @@ bool RCSwitch::decodePulseTrain(pulse_list_t pulse_list){
 
    return this->available();
 }
-#endif
 #endif

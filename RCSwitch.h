@@ -35,12 +35,6 @@
 
 typedef std::list<unsigned int> pulse_list_t;
 
-// At least for the ATTiny X4/X5, receiving has to be disabled due to
-// missing libm depencies (udivmodhi4)
-#if defined( __AVR_ATtinyX5__ ) or defined ( __AVR_ATtinyX4__ )
-#define RCSwitchDisableReceiving
-#endif
-
 // Number of maximum high/Low changes per packet.
 // We can handle up to (unsigned long) => 32 bit * 2 H/L changes per bit + 2 for sync
 #define RCSWITCH_MAX_CHANGES 67
@@ -65,10 +59,6 @@ class RCSwitch {
     pulse_list_t send(unsigned long code, unsigned int length);
     pulse_list_t send(const char* sCodeWord);
     
-    #if not defined( RCSwitchDisableReceiving )
-    void enableReceive(int interrupt);
-    void enableReceive();
-    void disableReceive();
     bool available();
     void resetAvailable();
 
@@ -77,13 +67,10 @@ class RCSwitch {
     unsigned int getReceivedDelay();
     unsigned int getReceivedProtocol();
     unsigned int* getReceivedRawdata();
-    #endif
   
     void setPulseLength(int nPulseLength);
     void setRepeatTransmit(int nRepeatTransmit);
-    #if not defined( RCSwitchDisableReceiving )
     void setReceiveTolerance(int nPercent);
-    #endif
 
     /**
      * Description of a single pule, which consists of a high signal
@@ -139,16 +126,11 @@ class RCSwitch {
     char* getCodeWordC(char sFamily, int nGroup, int nDevice, bool bStatus);
     char* getCodeWordD(char group, int nDevice, bool bStatus);
 
-    #if not defined( RCSwitchDisableReceiving )
-    static void handleInterrupt(unsigned int duration);
     static bool receiveProtocol(const int p, unsigned int changeCount);
-    int nReceiverInterrupt;
-    #endif
     int nRepeatTransmit;
     
     Protocol protocol;
 
-    #if not defined( RCSwitchDisableReceiving )
     static int nReceiveTolerance;
     volatile static unsigned long nReceivedValue;
     volatile static unsigned int nReceivedBitlength;
@@ -159,7 +141,6 @@ class RCSwitch {
      * timings[0] contains sync timing, followed by a number of bits
      */
     static unsigned int timings[RCSWITCH_MAX_CHANGES];
-    #endif
 
     
 };
