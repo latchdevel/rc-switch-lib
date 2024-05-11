@@ -472,11 +472,14 @@ void RCSwitch::send(unsigned long code, unsigned int length) {
   for (int nRepeat = 0; nRepeat < nRepeatTransmit; nRepeat++) {
     for (int i = length-1; i >= 0; i--) {
       if (code & (1L << i))
-        this->transmit(protocol.one);
+        //this->transmit(protocol.one);
+        printf("%i,%i,",this->protocol.pulseLength * protocol.one.high,this->protocol.pulseLength * protocol.one.low);
       else
-        this->transmit(protocol.zero);
+        //this->transmit(protocol.zero);
+        printf("%i,%i,",this->protocol.pulseLength * protocol.zero.high,this->protocol.pulseLength * protocol.zero.low);
     }
-    this->transmit(protocol.syncFactor);
+    //this->transmit(protocol.syncFactor);
+    printf("%i,%i,",this->protocol.pulseLength * protocol.syncFactor.high,this->protocol.pulseLength * protocol.syncFactor.low);
     printf("\n");
   }
 
@@ -494,9 +497,12 @@ void RCSwitch::send(unsigned long code, unsigned int length) {
 /**
  * Transmit a single high-low pulse.
  */
+/*
 void RCSwitch::transmit(HighLow pulses) {
   uint8_t firstLogicLevel = (this->protocol.invertedSignal) ? LOW : HIGH;
   uint8_t secondLogicLevel = (this->protocol.invertedSignal) ? HIGH : LOW;
+
+ //printf("\nDEBUG: pulses.high:%i, pulses.low:%i \n",pulses.high, pulses.low);
 
   printf("%i,%i,",this->protocol.pulseLength * pulses.high,this->protocol.pulseLength * pulses.low);
   
@@ -505,7 +511,7 @@ void RCSwitch::transmit(HighLow pulses) {
   //review// digitalWrite(this->nTransmitterPin, secondLogicLevel);
   //review// delayMicroseconds( this->protocol.pulseLength * pulses.low);
 }
-
+*/
 
 #if not defined( RCSwitchDisableReceiving )
 /**
