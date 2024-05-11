@@ -136,7 +136,6 @@ class RCSwitch {
     char* getCodeWordB(int nGroupNumber, int nSwitchNumber, bool bStatus);
     char* getCodeWordC(char sFamily, int nGroup, int nDevice, bool bStatus);
     char* getCodeWordD(char group, int nDevice, bool bStatus);
-    //void transmit(HighLow pulses);
 
     #if not defined( RCSwitchDisableReceiving )
     static void handleInterrupt();

@@ -36,10 +36,6 @@
 
 #include <string.h> /* memcpy */
 #include <stdlib.h> /* abs */
-#include <stdio.h>  /* printf */
-
-#define LOW 0
-#define HIGH 1
 
 /* Format for protocol definitions:
  * {pulselength, Sync bit, "0" bit, "1" bit, invertedSignal}
@@ -117,11 +113,7 @@ void RCSwitch::setProtocol(int nProtocol) {
   if (nProtocol < 1 || nProtocol > numProto) {
     nProtocol = 1;  // TODO: trigger an error, e.g. "bad protocol" ???
   }
-#if defined(ESP8266) || defined(ESP32)
-  this->protocol = proto[nProtocol-1];
-#else
   memcpy(&this->protocol, &proto[nProtocol-1], sizeof(Protocol));
-#endif
 }
 
 /**
@@ -479,32 +471,17 @@ pulse_list_t RCSwitch::send(unsigned long code, unsigned int length) {
 
   pulse_list_t pulse_list;
 
-#if not defined( RCSwitchDisableReceiving )
-  // make sure the receiver is disabled while we transmit
-  int nReceiverInterrupt_backup = nReceiverInterrupt;
-  if (nReceiverInterrupt_backup != -1) {
-    this->disableReceive();
-  }
-#endif
-
   for (int nRepeat = 0; nRepeat < nRepeatTransmit; nRepeat++) {
     for (int i = length-1; i >= 0; i--) {
       if (code & (1L << i)){
-        //this->transmit(protocol.one);
-        //printf("%i,%i,",this->protocol.pulseLength * protocol.one.high,this->protocol.pulseLength * protocol.one.low);
         pulse_list.push_back(this->protocol.pulseLength * protocol.one.high);
         pulse_list.push_back(this->protocol.pulseLength * protocol.one.low);
       }
       else{
-        //this->transmit(protocol.zero);
-        //printf("%i,%i,",this->protocol.pulseLength * protocol.zero.high,this->protocol.pulseLength * protocol.zero.low);
         pulse_list.push_back(this->protocol.pulseLength * protocol.zero.high);
         pulse_list.push_back(this->protocol.pulseLength * protocol.zero.low);
       }
     }
-    //this->transmit(protocol.syncFactor);
-    //printf("%i,%i,",this->protocol.pulseLength * protocol.syncFactor.high,this->protocol.pulseLength * protocol.syncFactor.low);
-    //printf("\n");
     pulse_list.push_back(this->protocol.pulseLength * protocol.syncFactor.high);
     pulse_list.push_back(this->protocol.pulseLength * protocol.syncFactor.low);
     if (this->protocol.invertedSignal){
@@ -513,36 +490,9 @@ pulse_list_t RCSwitch::send(unsigned long code, unsigned int length) {
     }
   }
 
-  // Disable transmit after sending (i.e., for inverted protocols)
-  //review// digitalWrite(this->nTransmitterPin, LOW);
-
-#if not defined( RCSwitchDisableReceiving )
-  // enable receiver again if we just disabled it
-  if (nReceiverInterrupt_backup != -1) {
-    this->enableReceive(nReceiverInterrupt_backup);
-  }
-#endif
   return pulse_list;
 }
 
-/**
- * Transmit a single high-low pulse.
- */
-/*
-void RCSwitch::transmit(HighLow pulses) {
-  uint8_t firstLogicLevel = (this->protocol.invertedSignal) ? LOW : HIGH;
-  uint8_t secondLogicLevel = (this->protocol.invertedSignal) ? HIGH : LOW;
-
- //printf("\nDEBUG: pulses.high:%i, pulses.low:%i \n",pulses.high, pulses.low);
-
-  printf("%i,%i,",this->protocol.pulseLength * pulses.high,this->protocol.pulseLength * pulses.low);
-  
-  //review// digitalWrite(this->nTransmitterPin, firstLogicLevel);
-  //review// delayMicroseconds( this->protocol.pulseLength * pulses.high);
-  //review// digitalWrite(this->nTransmitterPin, secondLogicLevel);
-  //review// delayMicroseconds( this->protocol.pulseLength * pulses.low);
-}
-*/
 
 #if not defined( RCSwitchDisableReceiving )
 /**
@@ -606,12 +556,8 @@ static inline unsigned int diff(int A, int B) {
  *
  */
 bool RCSwitch::receiveProtocol(const int p, unsigned int changeCount) {
-#if defined(ESP8266) || defined(ESP32)
-    const Protocol &pro = proto[p-1];
-#else
     Protocol pro;
     memcpy(&pro, &proto[p-1], sizeof(Protocol));
-#endif
 
     unsigned long code = 0;
     //Assuming the longer pulse length is the pulse captured in timings[0]
