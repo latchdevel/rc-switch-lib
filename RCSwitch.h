@@ -77,8 +77,6 @@ class RCSwitch {
     unsigned int* getReceivedRawdata();
     #endif
   
-    void enableTransmit(int nTransmitterPin);
-    void disableTransmit();
     void setPulseLength(int nPulseLength);
     void setRepeatTransmit(int nRepeatTransmit);
     #if not defined( RCSwitchDisableReceiving )
@@ -143,7 +141,6 @@ class RCSwitch {
     static bool receiveProtocol(const int p, unsigned int changeCount);
     int nReceiverInterrupt;
     #endif
-    int nTransmitterPin;
     int nRepeatTransmit;
     
     Protocol protocol;

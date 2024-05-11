@@ -93,7 +93,6 @@ unsigned int RCSwitch::timings[RCSWITCH_MAX_CHANGES];
 #endif
 
 RCSwitch::RCSwitch() {
-  this->nTransmitterPin = -1;
   this->setRepeatTransmit(10);
   this->setProtocol(1);
   #if not defined( RCSwitchDisableReceiving )
@@ -155,24 +154,6 @@ void RCSwitch::setReceiveTolerance(int nPercent) {
   RCSwitch::nReceiveTolerance = nPercent;
 }
 #endif
-  
-
-/**
- * Enable transmissions
- *
- * @param nTransmitterPin    Arduino Pin to which the sender is connected to
- */
-void RCSwitch::enableTransmit(int nTransmitterPin) {
-  this->nTransmitterPin = nTransmitterPin;
-  //review// pinMode(this->nTransmitterPin, OUTPUT);
-}
-
-/**
-  * Disable transmissions
-  */
-void RCSwitch::disableTransmit() {
-  this->nTransmitterPin = -1;
-}
 
 /**
  * Switch a remote switch on (Type D REV)
@@ -478,8 +459,6 @@ void RCSwitch::send(const char* sCodeWord) {
  * then the bit at position length-2, and so on, till finally the bit at position 0.
  */
 void RCSwitch::send(unsigned long code, unsigned int length) {
-  if (this->nTransmitterPin == -1)
-    return;
 
 #if not defined( RCSwitchDisableReceiving )
   // make sure the receiver is disabled while we transmit
