@@ -37,10 +37,6 @@
 #include <string.h> /* memcpy */
 #include <stdlib.h> /* abs */
 
-#define memcpy_P(dest, src, num) memcpy((dest), (src), (num))
-
-#define VAR_ISR_ATTR
-
 #define LOW 0
 #define HIGH 1
 
@@ -124,7 +120,7 @@ void RCSwitch::setProtocol(int nProtocol) {
 #if defined(ESP8266) || defined(ESP32)
   this->protocol = proto[nProtocol-1];
 #else
-  memcpy_P(&this->protocol, &proto[nProtocol-1], sizeof(Protocol));
+  memcpy(&this->protocol, &proto[nProtocol-1], sizeof(Protocol));
 #endif
 }
 
@@ -594,7 +590,7 @@ bool RCSwitch::receiveProtocol(const int p, unsigned int changeCount) {
     const Protocol &pro = proto[p-1];
 #else
     Protocol pro;
-    memcpy_P(&pro, &proto[p-1], sizeof(Protocol));
+    memcpy(&pro, &proto[p-1], sizeof(Protocol));
 #endif
 
     unsigned long code = 0;
