@@ -414,7 +414,7 @@ char* RCSwitch::getCodeWordD(char sGroup, int nDevice, bool bStatus) {
 /**
  * @param sCodeWord   a tristate code word consisting of the letter 0, 1, F
  */
-void RCSwitch::sendTriState(const char* sCodeWord) {
+pulse_list_t RCSwitch::sendTriState(const char* sCodeWord) {
   // turn the tristate code word into the corresponding bit pattern, then send it
   unsigned long code = 0;
   unsigned int length = 0;
@@ -435,13 +435,13 @@ void RCSwitch::sendTriState(const char* sCodeWord) {
     }
     length += 2;
   }
-  this->send(code, length);
+  return this->send(code, length);
 }
 
 /**
  * @param sCodeWord   a binary code word consisting of the letter 0, 1
  */
-void RCSwitch::send(const char* sCodeWord) {
+pulse_list_t RCSwitch::send(const char* sCodeWord) {
   // turn the tristate code word into the corresponding bit pattern, then send it
   unsigned long code = 0;
   unsigned int length = 0;
@@ -451,7 +451,7 @@ void RCSwitch::send(const char* sCodeWord) {
       code |= 1L;
     length++;
   }
-  this->send(code, length);
+  return this->send(code, length);
 }
 
 /**
@@ -459,7 +459,9 @@ void RCSwitch::send(const char* sCodeWord) {
  * bits are sent from MSB to LSB, i.e., first the bit at position length-1,
  * then the bit at position length-2, and so on, till finally the bit at position 0.
  */
-void RCSwitch::send(unsigned long code, unsigned int length) {
+pulse_list_t RCSwitch::send(unsigned long code, unsigned int length) {
+
+  pulse_list_t pulse_list;
 
 #if not defined( RCSwitchDisableReceiving )
   // make sure the receiver is disabled while we transmit
@@ -471,16 +473,28 @@ void RCSwitch::send(unsigned long code, unsigned int length) {
 
   for (int nRepeat = 0; nRepeat < nRepeatTransmit; nRepeat++) {
     for (int i = length-1; i >= 0; i--) {
-      if (code & (1L << i))
+      if (code & (1L << i)){
         //this->transmit(protocol.one);
-        printf("%i,%i,",this->protocol.pulseLength * protocol.one.high,this->protocol.pulseLength * protocol.one.low);
-      else
+        //printf("%i,%i,",this->protocol.pulseLength * protocol.one.high,this->protocol.pulseLength * protocol.one.low);
+        pulse_list.push_back(this->protocol.pulseLength * protocol.one.high);
+        pulse_list.push_back(this->protocol.pulseLength * protocol.one.low);
+      }
+      else{
         //this->transmit(protocol.zero);
-        printf("%i,%i,",this->protocol.pulseLength * protocol.zero.high,this->protocol.pulseLength * protocol.zero.low);
+        //printf("%i,%i,",this->protocol.pulseLength * protocol.zero.high,this->protocol.pulseLength * protocol.zero.low);
+        pulse_list.push_back(this->protocol.pulseLength * protocol.zero.high);
+        pulse_list.push_back(this->protocol.pulseLength * protocol.zero.low);
+      }
     }
     //this->transmit(protocol.syncFactor);
-    printf("%i,%i,",this->protocol.pulseLength * protocol.syncFactor.high,this->protocol.pulseLength * protocol.syncFactor.low);
-    printf("\n");
+    //printf("%i,%i,",this->protocol.pulseLength * protocol.syncFactor.high,this->protocol.pulseLength * protocol.syncFactor.low);
+    //printf("\n");
+    pulse_list.push_back(this->protocol.pulseLength * protocol.syncFactor.high);
+    pulse_list.push_back(this->protocol.pulseLength * protocol.syncFactor.low);
+    if (this->protocol.invertedSignal){
+      pulse_list.push_front(pulse_list.back());
+      pulse_list.pop_back();
+    }
   }
 
   // Disable transmit after sending (i.e., for inverted protocols)
@@ -492,6 +506,7 @@ void RCSwitch::send(unsigned long code, unsigned int length) {
     this->enableReceive(nReceiverInterrupt_backup);
   }
 #endif
+  return pulse_list;
 }
 
 /**

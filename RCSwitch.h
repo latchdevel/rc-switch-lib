@@ -31,7 +31,9 @@
 #define _RCSwitch_h
 
 #include <stdint.h>
+#include <list>
 
+typedef std::list<int> pulse_list_t;
 
 // At least for the ATTiny X4/X5, receiving has to be disabled due to
 // missing libm depencies (udivmodhi4)
@@ -59,9 +61,9 @@ class RCSwitch {
     void switchOn(char sGroup, int nDevice);
     void switchOff(char sGroup, int nDevice);
 
-    void sendTriState(const char* sCodeWord);
-    void send(unsigned long code, unsigned int length);
-    void send(const char* sCodeWord);
+    pulse_list_t sendTriState(const char* sCodeWord);
+    pulse_list_t send(unsigned long code, unsigned int length);
+    pulse_list_t send(const char* sCodeWord);
     
     #if not defined( RCSwitchDisableReceiving )
     void enableReceive(int interrupt);
@@ -134,7 +136,7 @@ class RCSwitch {
     char* getCodeWordB(int nGroupNumber, int nSwitchNumber, bool bStatus);
     char* getCodeWordC(char sFamily, int nGroup, int nDevice, bool bStatus);
     char* getCodeWordD(char group, int nDevice, bool bStatus);
-    void transmit(HighLow pulses);
+    //void transmit(HighLow pulses);
 
     #if not defined( RCSwitchDisableReceiving )
     static void handleInterrupt();
