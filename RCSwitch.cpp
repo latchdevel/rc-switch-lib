@@ -652,6 +652,7 @@ void RCSwitch::handleInterrupt(unsigned int _duration) {
   //lastTime = time;  
 }
 
+#if 0
 bool RCSwitch::decodePulseTrain(pulse_list_t pulse_list){
 
    this->resetAvailable();
@@ -664,4 +665,37 @@ bool RCSwitch::decodePulseTrain(pulse_list_t pulse_list){
 
    return this->available();
 }
+#else
+
+bool RCSwitch::decodePulseTrain(pulse_list_t pulse_list){
+
+   this->resetAvailable();
+
+   unsigned int changeCount = pulse_list.size();
+
+   if (changeCount >= RCSWITCH_MAX_CHANGES){
+      return false;
+   }
+
+   // Instance iterator
+   pulse_list_t::iterator it=pulse_list.begin();
+
+   // Populate timings array
+   for (unsigned index = 1 ; index < changeCount; index++){
+      RCSwitch::timings[index]=*it++;
+   }
+   // Populate footer pulse as first element
+   RCSwitch::timings[0] = *it;
+
+   // Try to decode
+   for(unsigned int i = 1; i <= numProto; i++) {
+      if (receiveProtocol(i, changeCount)) {
+         // receive succeeded for protocol i
+         break;
+      }
+   }
+
+   return this->available();
+}
+#endif
 #endif
