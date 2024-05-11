@@ -36,6 +36,7 @@
 
 #include <string.h> /* memcpy */
 #include <stdlib.h> /* abs */
+#include <stdio.h>  /* printf */
 
 #define LOW 0
 #define HIGH 1
@@ -476,6 +477,7 @@ void RCSwitch::send(unsigned long code, unsigned int length) {
         this->transmit(protocol.zero);
     }
     this->transmit(protocol.syncFactor);
+    printf("\n");
   }
 
   // Disable transmit after sending (i.e., for inverted protocols)
@@ -495,6 +497,8 @@ void RCSwitch::send(unsigned long code, unsigned int length) {
 void RCSwitch::transmit(HighLow pulses) {
   uint8_t firstLogicLevel = (this->protocol.invertedSignal) ? LOW : HIGH;
   uint8_t secondLogicLevel = (this->protocol.invertedSignal) ? HIGH : LOW;
+
+  printf("%i,%i,",this->protocol.pulseLength * pulses.high,this->protocol.pulseLength * pulses.low);
   
   //review// digitalWrite(this->nTransmitterPin, firstLogicLevel);
   //review// delayMicroseconds( this->protocol.pulseLength * pulses.high);
