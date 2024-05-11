@@ -37,7 +37,6 @@
 #include <string.h> /* memcpy */
 #include <stdlib.h> /* abs */
 
-#define PROGMEM
 #define memcpy_P(dest, src, num) memcpy((dest), (src), (num))
 
 #define RECEIVE_ATTR
@@ -65,11 +64,8 @@
  *
  * These are combined to form Tri-State bits when sending or receiving codes.
  */
-#if defined(ESP8266) || defined(ESP32)
-static const VAR_ISR_ATTR RCSwitch::Protocol proto[] = {
-#else
-static const RCSwitch::Protocol PROGMEM proto[] = {
-#endif
+
+static const RCSwitch::Protocol proto[] = {
   { 350, {  1, 31 }, {  1,  3 }, {  3,  1 }, false },    // protocol 1
   { 650, {  1, 10 }, {  1,  2 }, {  2,  1 }, false },    // protocol 2
   { 100, { 30, 71 }, {  4, 11 }, {  9,  6 }, false },    // protocol 3
