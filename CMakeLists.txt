@@ -57,6 +57,8 @@ elseif(MSVC)
   set(MSVC_DISABLED_WARNINGS_LIST
     "C4996" # warning C4996: 'may be unsafe/disable deprecation'
             # To disable deprecation, use _CRT_SECURE_NO_WARNINGS.
+    "C4458" # warning C4458: 'declaration hides class member'
+    "C4456" # warning C4456: 'declaration hides previous local declaration'
   )
   string(REPLACE "C" " -wd" MSVC_DISABLED_WARNINGS_STR ${MSVC_DISABLED_WARNINGS_LIST})
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -W4 ${MSVC_DISABLED_WARNINGS_STR}")
