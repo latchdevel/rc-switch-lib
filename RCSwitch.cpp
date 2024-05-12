@@ -95,7 +95,7 @@ const unsigned int RCSwitch::nSeparationLimit = 4300;
 unsigned int RCSwitch::timings[RCSWITCH_MAX_CHANGES];
 
 RCSwitch::RCSwitch() {
-  this->setRepeatTransmit(10);
+  this->setRepeatTransmit(1);
   this->setProtocol(1);
   this->setReceiveTolerance(60);
   RCSwitch::nReceivedValue = 0;
