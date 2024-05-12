@@ -1,3 +1,7 @@
+# Compiler outputs 
+build
+build-*
+
 # Visual Studio Code
 .vscode/
 .devcontainer/
