@@ -645,7 +645,7 @@ bool RCSwitch::decodePulseTrain(pulse_list_t pulse_list){
 
    this->resetAvailable();
 
-   unsigned int changeCount = pulse_list.size();
+   unsigned int changeCount = static_cast<unsigned int>(pulse_list.size());
 
    if (changeCount >= RCSWITCH_MAX_CHANGES){
       return false;
@@ -655,7 +655,7 @@ bool RCSwitch::decodePulseTrain(pulse_list_t pulse_list){
    pulse_list_t::iterator it=pulse_list.begin();
 
    // Populate timings array
-   for (unsigned index = 1 ; index < changeCount; index++){
+   for (unsigned int index = 1 ; index < changeCount; index++){
       RCSwitch::timings[index]=*it++;
    }
    // Populate footer pulse as first element
