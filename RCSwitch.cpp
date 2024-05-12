@@ -121,7 +121,7 @@ void RCSwitch::setProtocol(int nProtocol) {
 /**
   * Sets the protocol to send with pulse length in microseconds.
   */
-void RCSwitch::setProtocol(int nProtocol, int nPulseLength) {
+void RCSwitch::setProtocol(int nProtocol, uint16_t nPulseLength) {
   setProtocol(nProtocol);
   this->setPulseLength(nPulseLength);
 }
@@ -130,7 +130,7 @@ void RCSwitch::setProtocol(int nProtocol, int nPulseLength) {
 /**
   * Sets pulse length in microseconds
   */
-void RCSwitch::setPulseLength(int nPulseLength) {
+void RCSwitch::setPulseLength(uint16_t nPulseLength) {
   this->protocol.pulseLength = nPulseLength;
 }
 

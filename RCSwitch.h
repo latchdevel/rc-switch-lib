@@ -75,7 +75,7 @@ class RCSwitch {
     unsigned int getReceivedProtocol();
     unsigned int* getReceivedRawdata();
   
-    void setPulseLength(int nPulseLength);
+    void setPulseLength(uint16_t nPulseLength);
     void setRepeatTransmit(int nRepeatTransmit);
     void setReceiveTolerance(int nPercent);
 
@@ -123,7 +123,7 @@ class RCSwitch {
 
     void setProtocol(Protocol protocol);
     void setProtocol(int nProtocol);
-    void setProtocol(int nProtocol, int nPulseLength);
+    void setProtocol(int nProtocol, uint16_t nPulseLength);
 
     bool decodePulseTrain(pulse_list_t);
 
