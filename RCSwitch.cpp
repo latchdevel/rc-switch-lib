@@ -1,4 +1,11 @@
 /*
+  RCSwitch Common Library 
+  
+  Adaptation of RCSwitch Arduino library to be used on any system
+  Copyright (c) 2024 Jorge Rivera. All right reserved.
+
+  Project home: https://github.com/latchdevel/rc-switch-lib
+
   RCSwitch - Arduino libary for remote control outlet switches
   Copyright (c) 2011 Suat Özgür.  All right reserved.
   
