@@ -87,9 +87,12 @@ set_target_properties( ${PROJECT_NAME}-dynamic PROPERTIES SOVERSION ${SO_VERSION
 # Add static library, file extension OS depends, like: RCSwitch.a or RCSwitch.lib
 add_library( ${PROJECT_NAME} STATIC $<TARGET_OBJECTS:${PROJECT_NAME}-obj> )
 
+# Add library header file
+set_property(TARGET ${PROJECT_NAME} PROPERTY PUBLIC_HEADER RCSwitch.h )
+
 # Add install targets
-install(TARGETS ${PROJECT_NAME} DESTINATION lib)
 install(TARGETS ${PROJECT_NAME}-dynamic DESTINATION lib)
+install(TARGETS ${PROJECT_NAME} PUBLIC_HEADER DESTINATION include)
 
 # If no has parent directory, add uninstall targets
 if(NOT hasParent)
