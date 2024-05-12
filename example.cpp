@@ -37,7 +37,7 @@ int main(){
    // pulse_list = mySwitch.sendTriState("00000FFF0F0F");      // tri-state code
    
    // Optional: Display raw pulse list
-   printf("raw_pulses[%lu]={",static_cast<unsigned int>(pulse_list.size()));
+   printf("raw_pulses[%u]={",static_cast<unsigned int>(pulse_list.size()));
    pulse_list_t::iterator it=pulse_list.begin();
    while (it != pulse_list.end()){
       printf("%i",*it);
@@ -56,7 +56,7 @@ int main(){
          
       // Optional: Display decoded pulse list
       unsigned int* timings = mySwitch.getReceivedRawdata();
-      printf("dec_pulses[%lu]={",static_cast<unsigned int>(pulse_list.size()));
+      printf("dec_pulses[%u]={",static_cast<unsigned int>(pulse_list.size()));
       for (unsigned index = 1 ; index < pulse_list.size(); index++){
             printf("%u,",timings[index]);
       }

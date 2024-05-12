@@ -5,6 +5,7 @@ Adaptation of ["RCSwitch"](https://github.com/sui77/rc-switch) Arduino library t
 Works on any **libc++** compatible system, such as macOS, FreeBSD, Linux, and even Windows.
 
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
+[![Build tests](https://github.com/latchdevel/rc-switch-lib/actions/workflows/BuildTest.yml/badge.svg)](https://github.com/latchdevel/rc-switch-lib/actions/workflows/BuildTest.yml)
 
 Originally developed for Arduino framework, it has been ported to Raspberry Pi using the WiringPi library.
 
