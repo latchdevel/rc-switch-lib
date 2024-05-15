@@ -67,6 +67,7 @@ endif()
 # If macOS builds a Mach-O universal binary with 2 architectures: x86_64 and arm64 for Apple M processors
 if (APPLE) 
     set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64")
+    set(CMAKE_OSX_DEPLOYMENT_TARGET "11.0")
 endif()
 
 # Add sources for library to compile as object 
