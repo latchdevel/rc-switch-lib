@@ -521,6 +521,17 @@ unsigned int* RCSwitch::getReceivedRawdata() {
   return RCSwitch::timings;
 }
 
+pulse_list_t RCSwitch::getReceivedRawdataList() {
+
+  if (!this->available()) return pulse_list_t();
+
+  pulse_list_t pulse_list = pulse_list_t(RCSwitch::timings+1, RCSwitch::timings+((RCSwitch::nReceivedBitlength+1)*2));
+
+  pulse_list.push_back(*RCSwitch::timings);
+
+  return pulse_list;
+} 
+
 /* helper function for the receiveProtocol method */
 static inline unsigned int diff(int A, int B) {
   return abs(A - B);

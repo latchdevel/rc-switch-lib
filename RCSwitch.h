@@ -74,6 +74,7 @@ class RCSwitch {
     unsigned int getReceivedDelay();
     unsigned int getReceivedProtocol();
     unsigned int* getReceivedRawdata();
+    pulse_list_t getReceivedRawdataList();
   
     void setPulseLength(uint16_t nPulseLength);
     void setRepeatTransmit(int nRepeatTransmit);
