@@ -66,7 +66,7 @@ jobs:
     steps:
         # Clone repo using the checkout action.
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Create Build Environment
         # Some projects don't allow in-source building, so create a separate build directory
@@ -91,7 +91,7 @@ jobs:
 
         # Upload binary files to artifacts
       - name: Upload compiled binaries to Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: "Binaries for ${{ matrix.config.name }}"
           path: |
